@@ -1,9 +1,10 @@
+#define _WIN32_WINNT 0x0501
 #include <windows.h>
 #ifdef Menu
-#define BIG 1<<22
+#define BIG 8
 #define Invisible
 #else
-#define BIG 1<<27
+#define BIG 10
 #endif
 NOTIFYICONDATA nid = {sizeof(nid)};
 void remove_icon(void) {Shell_NotifyIcon(2, &nid);}
@@ -17,6 +18,17 @@ void add_to_startup(void) {
 	RegCloseKey(hKey);
 }
 #endif
+static float cpu_load(unsigned long long x, unsigned long long y) {
+   static unsigned long long px = 0;
+   static unsigned long long py = 0;
+   unsigned long long dx = y-px;
+   unsigned long long dy  = x-py;
+   float ret = 1.0f-((dx > 0) ? ((float)dy)/dx : 0);
+   px = y;
+   py  = x;
+   return ret;
+}
+static unsigned long long ft2int(const FILETIME ft) {return (((unsigned long long)(ft.dwHighDateTime))<<32)|((unsigned long long)ft.dwLowDateTime);}
 int main(void) {
 	int i = 0, j = 0;
 	char path[10] = "cat\\*.ico"; // path to the icons
@@ -36,18 +48,17 @@ int main(void) {
 	Shell_NotifyIcon(0, &nid); // add icon to tray
 	atexit(remove_icon); // remove icon on exit (won't work since the window is hidden when not in DEBUG mode)
 	while (1) { // main loop
-		while (i++<BIG) // delay loop
+		while (i++<BIG) { // delay loop
 #ifdef Menu
-		{
 			if (GetAsyncKeyState(1) || GetAsyncKeyState(2)) { // if mouse is clicked
 					GetCursorPos(&p); // get mouse position
 					TrackPopupMenu(hMenu, 2, p.x, p.y, 0, nid.hWnd, 0); // show menu near the mouse
 					Sleep(100);
 			}
-		}
-#else
-		;
 #endif
+			FILETIME idleTime, kernelTime, userTime;
+			Sleep(cpu_load(ft2int(idleTime), ft2int(kernelTime)+ft2int(userTime)));
+		}
 		path[4] = j+++'0'; // change icon path
 		i %= BIG; // reset
 		j %= 5; // reset

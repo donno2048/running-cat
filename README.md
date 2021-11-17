@@ -10,21 +10,13 @@ I found it very difficult to implement this as there was no documentation regard
 
 ```bat
 windres main.rc main.o
-gcc main.c main.o -omain
+gcc main.c main.o -o main
 ```
 
-### Options
-
-- Invisible: make the command line invisible (will make it impossible to kill the cat until the menu will be implemented)
+### Menu (recommended)
 
 ```bat
-gcc main.c -o main -D Invisible
-```
-
-- Menu: use experimental menu (not recommended)
-
-```bat
-gcc main.c -o main -D Menu
+gcc main.c main.o -o main -D Menu
 ```
 
 ## Use

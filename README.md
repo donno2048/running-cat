@@ -8,6 +8,8 @@ I found it very difficult to implement this as there was no documentation regard
 
 ## Compile
 
+(If you want to rename it you will have to compile it with a different name)
+
 ```bat
 windres main.rc main.o
 gcc main.c main.o -o main

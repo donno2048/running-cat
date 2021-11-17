@@ -7,7 +7,8 @@ The cat icons are by Kyome22 under the Apache License.
 ## Compile
 
 ```bat
-gcc main.c -o main
+windres main.rc main.o
+gcc main.c main.o -omain
 ```
 
 ### Options

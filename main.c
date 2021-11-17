@@ -21,18 +21,18 @@ void add_to_startup(void) {
 static float cpu_load(unsigned long long x, unsigned long long y) {
    static unsigned long long px = 0;
    static unsigned long long py = 0;
-   unsigned long long dx = y-px;
-   unsigned long long dy  = x-py;
-   float ret = 1.0f-((dx > 0) ? ((float)dy)/dx : 0);
+   unsigned long long dx = y - px;
+   unsigned long long dy  = x - py;
+   float ret = 1.0f - ((dx > 0) ? ((float)dy) / dx : 0);
    px = y;
-   py  = x;
+   py = x;
    return ret;
 }
 static unsigned long long ft2int(const FILETIME ft) {return (((unsigned long long)(ft.dwHighDateTime))<<32)|((unsigned long long)ft.dwLowDateTime);}
 int main(void) {
 	int i = 0, j = 0;
-	char path[10] = "cat\\*.ico"; // path to the icons
 	HMENU hMenu = NULL;
+	HINSTANCE hInstance = GetModuleHandle(0);
 	nid.uFlags = 7;
 	nid.uID = 1;
 #ifdef Invisible
@@ -59,10 +59,9 @@ int main(void) {
 			FILETIME idleTime, kernelTime, userTime;
 			Sleep(cpu_load(ft2int(idleTime), ft2int(kernelTime)+ft2int(userTime)));
 		}
-		path[4] = j+++'0'; // change icon path
 		i %= BIG; // reset
-		j %= 5; // reset
-		nid.hIcon = (HICON)LoadImage(0, path, 1, 0, 0, LR_LOADFROMFILE); // load icon from path
+		j = (j + 1) % 5; // cycle through the icons
+		nid.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(j)); // load icon
 		Shell_NotifyIcon(1, &nid); // update icon (will be shown on the tray)
 	}
 	return 0; // never reached

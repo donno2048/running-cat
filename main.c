@@ -50,6 +50,7 @@ int main(void) {
 					HWND hWnd = FindWindowEx(FindWindow("Shell_TrayWnd", 0), 0, "TrayNotifyWnd", 0);
 					HWND hWnd2 = FindWindowEx(hWnd, 0, "SysPager", 0);
 					if (WindowFromPoint(p) == (hWnd2 ? FindWindowEx(hWnd2, 0, "ToolbarWindow32", 0) : FindWindowEx(hWnd, 0, "ToolbarWindow32", 0))) {
+						SetForegroundWindow(nid.hWnd);
 						switch(TrackPopupMenu(hMenu, TPM_RETURNCMD, p.x, p.y, 0, nid.hWnd, 0)) { // show menu near mouse
 							case 1:
 								exit(0);
@@ -57,9 +58,6 @@ int main(void) {
 								add_to_startup();
 						}
 						Sleep(100);
-					}
-					else {
-						// TODO: remove hMenu
 					}
 			}
 #endif

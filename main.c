@@ -38,6 +38,7 @@ int main(void) {
 	hMenu = CreatePopupMenu(); // create menu
 	AppendMenu(hMenu, 0, 1, "Exit"); // add exit button to menu
 	AppendMenu(hMenu, 0, 2, "Add to startup"); // add add_to_startup button to menu
+	AppendMenu(hMenu, 0, -1, "Close"); // close button
 #endif
 	nid.hWnd = CreateWindowEx(0, "STATIC", "", 1<<31, 0, 0, 0, 0, 0, hMenu, 0, 0); // make icon focused
 	Shell_NotifyIcon(0, &nid); // add icon to tray

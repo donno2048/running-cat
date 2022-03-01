@@ -1,6 +1,5 @@
 #define _WIN32_WINNT 0x0501
 #include <windows.h>
-#ifdef Menu
 #define BIG 8
 void add_to_startup(void) {
 	HKEY hKey;
@@ -10,9 +9,6 @@ void add_to_startup(void) {
 	RegSetValueEx(hKey, "RunCat", 0, 1, (BYTE *) path, strlen(path) + 1);
 	RegCloseKey(hKey);
 }
-#else
-#define BIG 10
-#endif
 NOTIFYICONDATA nid = {sizeof(nid)};
 void remove_icon(void) {Shell_NotifyIcon(2, &nid);}
 static float cpu_load(unsigned long long x, unsigned long long y) {
@@ -32,20 +28,17 @@ int main(void) {
 	HINSTANCE hInstance = GetModuleHandle(0);
 	nid.uFlags = 7;
 	nid.uID = 1;
-#ifdef Menu
 	ShowWindow(FindWindowA("ConsoleWindowClass", 0), 0); // hide console window
 	POINT p; // mouse position
 	hMenu = CreatePopupMenu(); // create menu
 	AppendMenu(hMenu, 0, 1, "Exit"); // add exit button to menu
 	AppendMenu(hMenu, 0, 2, "Add to startup"); // add add_to_startup button to menu
 	AppendMenu(hMenu, 0, -1, "Close"); // close button
-#endif
 	nid.hWnd = CreateWindowEx(0, "STATIC", "", 1<<31, 0, 0, 0, 0, 0, hMenu, 0, 0); // make icon focused
 	Shell_NotifyIcon(0, &nid); // add icon to tray
 	atexit(remove_icon); // remove icon on exit
 	while (1) { // main loop
 		while (i++<BIG) { // delay loop
-#ifdef Menu
 			if ((GetAsyncKeyState(1) | GetAsyncKeyState(2)) & 1) { // if mouse is released
 				GetCursorPos(&p); // get mouse position
 				HWND hWnd = FindWindowEx(FindWindow("Shell_TrayWnd", 0), 0, "TrayNotifyWnd", 0);
@@ -62,7 +55,6 @@ int main(void) {
 					}
 				}
 			}
-#endif
 			FILETIME idleTime, kernelTime, userTime;
 			Sleep(cpu_load(ft2int(idleTime), ft2int(kernelTime) + ft2int(userTime)));
 		}

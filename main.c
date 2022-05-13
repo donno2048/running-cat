@@ -45,7 +45,11 @@ int main(void) {
 				HWND hWnd2 = FindWindowEx(hWnd, 0, "SysPager", 0);
 				if (WindowFromPoint(p) == (hWnd2 ? FindWindowEx(hWnd2, 0, "ToolbarWindow32", 0) : FindWindowEx(hWnd, 0, "ToolbarWindow32", 0))) {
 					SetForegroundWindow(nid.hWnd);
-					switch(TrackPopupMenu(hMenu, TPM_RETURNCMD, p.x, p.y, 0, nid.hWnd, 0)) { // show menu near mouse
+					switch(TrackPopupMenu(hMenu, TPM_RETURNCMD, p.x - 30, p.y - 30, 0, nid.hWnd, 0)) { // show menu near mouse
+						case -1:
+							RemoveMenu(hMenu, 0, 0);
+							Sleep(100);
+							break;
 						case 1:
 							exit(0);
 						case 2:

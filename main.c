@@ -1,6 +1,7 @@
 #define _WIN32_WINNT 0x0501
 #include <windows.h>
 #define BIG 8
+#define ever ;;
 void add_to_startup(void) {
 	HKEY hKey;
 	char path[MAX_PATH];
@@ -37,7 +38,7 @@ int main(void) {
 	nid.hWnd = CreateWindowEx(0, "STATIC", "", 1<<31, 0, 0, 0, 0, 0, hMenu, 0, 0); // make icon focused
 	Shell_NotifyIcon(0, &nid); // add icon to tray
 	atexit(remove_icon); // remove icon on exit
-	while (1) { // main loop
+	for (ever) { // main loop
 		while (i++<BIG) { // delay loop
 			if ((GetAsyncKeyState(1) | GetAsyncKeyState(2)) & 1) { // if mouse is released
 				GetCursorPos(&p); // get mouse position
